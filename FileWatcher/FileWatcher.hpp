@@ -26,7 +26,7 @@ private:
     constexpr FileWatcherErrorCategory& operator=(const FileWatcherErrorCategory&) noexcept = delete;
     constexpr FileWatcherErrorCategory& operator=(FileWatcherErrorCategory&&) noexcept		= delete;
 public:
-	consteval FileWatcherErrorCategory() noexcept = default;
+	FileWatcherErrorCategory() noexcept = default;
 	constexpr const char* name() const noexcept override final
 	{
 		return "File Watcher Category";
@@ -102,7 +102,8 @@ constexpr const char* FileActionToString(const EFileAction fileAction) noexcept
 using FileWatcherCallback = std::function<void(std::filesystem::path, std::optional<std::filesystem::path>, EFileAction, std::error_code)>;
 
 /**
- * File watcher class. Can be used to monitor either an existing directory recursively or a specific file. If the file doesn't exist, the watcher will listen for it's creation based on it's path.
+ * File watcher class. Can be used to monitor either an existing directory recursively or a specific file. 
+ * If the file doesn't exist, the watcher will listen for it's creation based on it's path.
  */
 class FileWatcher
 {
