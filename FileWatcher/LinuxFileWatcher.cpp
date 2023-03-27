@@ -136,6 +136,26 @@ void FileWatcher::SetupWatcher(const bool useAsbolutePath, std::error_code& erro
     m_InternalState->InotifyInstance = inotifyInstance;
     m_InternalState->RootWatchDescriptor = watcherHandle;
     m_IsWatching = true;
+
+    if(m_ObservedFile.empty())
+    {
+        for(const auto& file : std::filesystem::recursive_directory_iterator(m_ObservedPath))
+        {
+            if(file.is_directory())
+            {
+                const int subdirectoryWatchHandle{ inotify_add_watch(m_InternalState->InotifyInstance, std::filesystem::path(file).string().c_str(), s_RootWatcherFlags) };     
+                if(subdirectoryWatchHandle != -1)
+                    m_InternalState->SubdirectoryWatchDescriptors[subdirectoryWatchHandle] = file;
+                else
+                {
+                    m_IsWatching = false;
+                    error.assign(errno, std::system_category());
+                    break;
+                }
+            }
+        }
+    }
+
     m_WatcherThread = std::thread(&FileWatcher::WatcherThreadWork, this);
 }
 
