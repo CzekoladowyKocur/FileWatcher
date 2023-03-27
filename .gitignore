@@ -32,11 +32,6 @@ binaries/
 *.a
 *.lib
 
-# Executables
-*.out
-*.app
-*.exe
-
 # Generated Makefiles
 *Makefile*
 
